@@ -179,7 +179,7 @@ export default function Data() {
 
           <div className="md:w-1/2">
             <div className="rounded-lg border bg-white p-4 shadow-sm">
-              <h3 className="text-lg font-bold">{weekly ? "Weekly" : "Daily"} summary — {weekly ? weeks.find((w) => w.dates.includes(selected))?.label : shortLabel(new Date(selected))}</h3>
+              <h3 className="text-lg font-bold">Daily summary — {shortLabel(new Date(selected))}</h3>
 
               <div className="mt-4 flex flex-col md:flex-row items-center gap-6">
                 <div className="w-full md:w-1/2" style={{ height: 220 }}>

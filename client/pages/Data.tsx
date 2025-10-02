@@ -145,7 +145,7 @@ export default function Data() {
             </div>
 
             <div className="mt-4 grid grid-cols-7 gap-2">
-              {(weekly ? weeks.map((w, idx) => ({ key: w.label, label: w.label, dates: w.dates })) : fullData.map((d) => ({ key: d.date, label: shortLabel(new Date(d.date)), dates: [d.date] }))).map((cell) => {
+              {fullData.map((d) => ({ key: d.date, label: shortLabel(new Date(d.date)), dates: [d.date] })).map((cell) => {
                 // compute aggregate for the cell
                 const entries = fullData.filter((f) => cell.dates.includes(f.date)).map((f) => ({ yes: f.yes, no: f.no, both: f.both, reported: f.reported }));
                 const agg = computeAggregates(entries);

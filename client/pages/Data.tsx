@@ -193,7 +193,6 @@ export default function Data() {
                 <span className="inline-block h-3 w-3 rounded-sm bg-[#4CAF50]" /> <span>Yes</span>
                 <span className="inline-block h-3 w-3 rounded-sm bg-[#F44336] ml-3" /> <span>No</span>
                 <span className="inline-block h-3 w-3 rounded-sm bg-[#FFC107] ml-3" /> <span>Both</span>
-                <span className="inline-block h-3 w-3 rounded-sm bg-[#9E9E9E] ml-3" /> <span>NR</span>
               </div>
             </div>
           </div>
@@ -206,7 +205,7 @@ export default function Data() {
                 <div className="w-full md:w-1/2" style={{ height: 220 }}>
                   <ResponsiveContainer>
                     <PieChart>
-                      <Pie data={pieData} dataKey="value" outerRadius={80} innerRadius={30}>
+                      <Pie data={pieData} dataKey="value" outerRadius={80} innerRadius={40}>
                         {pieData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
@@ -217,10 +216,38 @@ export default function Data() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <div className="text-sm">Yes: <span className="font-semibold text-[#4CAF50]">{displayAggregates.yes}%</span></div>
-                  <div className="text-sm">No: <span className="font-semibold text-[#F44336]">{displayAggregates.no}%</span></div>
-                  <div className="text-sm">Both: <span className="font-semibold text-[#FFC107]">{displayAggregates.both}%</span></div>
-                  <div className="text-sm">NR: <span className="font-semibold text-[#9E9E9E]">{displayAggregates.nr}%</span></div>
+                  {(() => {
+                    const total = displayAggregates.reported || 0;
+                    if (total === 0) {
+                      return <div className="text-sm">No schools reported on this {weekly ? "week" : "date"}.</div>;
+                    }
+                    const yes = displayAggregates.yes || 0;
+                    const no = displayAggregates.no || 0;
+                    const both = displayAggregates.both || 0;
+                    // compute percentages, ensure sum to 100
+                    const parts = [
+                      { k: 'yes', v: yes, color: COLORS.yes },
+                      { k: 'no', v: no, color: COLORS.no },
+                      { k: 'both', v: both, color: COLORS.both },
+                    ].filter(p => p.v > 0);
+                    let acc = 0;
+                    const withPct = parts.map((p, i) => {
+                      const pct = i === parts.length - 1 ? 100 - acc : Math.round((p.v / total) * 100);
+                      acc += pct;
+                      return { ...p, pct };
+                    });
+
+                    return (
+                      <>
+                        {withPct.map((p) => (
+                          <div key={p.k} className="text-sm">
+                            {p.k === 'yes' ? 'Yes' : p.k === 'no' ? 'No' : 'Both'}: <span className="font-semibold" style={{ color: p.color }}>{p.pct}%</span>
+                          </div>
+                        ))}
+                        <div className="mt-3 text-sm text-foreground/70">{total} schools reported on this {weekly ? 'week' : 'date'}.</div>
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
 

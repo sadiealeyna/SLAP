@@ -64,8 +64,8 @@ export default function SiteHeader() {
             <NavLink to="/law" className={navItemClass} onClick={() => setOpen(false)}>
               California Law
             </NavLink>
-            <NavLink to="/privacy" className={navItemClass} onClick={() => setOpen(false)}>
-              Privacy
+            <NavLink to="/data" className={navItemClass} onClick={() => setOpen(false)}>
+              Data
             </NavLink>
           </div>
         </div>

@@ -44,13 +44,27 @@ export default function Report() {
     setSending(true);
 
     const templateParams = {
+      // common aliases to increase compatibility with different EmailJS template variable names
       to_email: principalEmail,
+      to: principalEmail,
+      recipient_email: principalEmail,
+      recipient: principalEmail,
+
       from_email: FROM_EMAIL,
+      from: FROM_EMAIL,
+      sender: FROM_EMAIL,
+
       subject: emailSubject,
+      title: emailSubject,
+
+      message: emailBody,
+      body: emailBody,
+      text: emailBody,
+
       grade: grade,
       school: school,
       reporter: reporterName,
-      body: emailBody,
+      reporter_name: reporterName,
     } as Record<string, string>;
 
     try {

@@ -25,6 +25,14 @@ export default function Report() {
     return `Hello Principal,\n\nA report has been submitted via the Student Legislative Accountability Project (SLAP):\n\nGrade: [${grade}]\nSchool: [${school}]\nReporter: [${reporterName}]\n\nThis message was sent on behalf of SLAP (slap.student.project@gmail.com).`;
   }, [grade, school, reporterName]);
 
+  const htmlBody = useMemo(() => {
+    return (`<p>Dear ${school || "[School Name]"},</p>` +
+      `<p>I am writing to inform you of a concern regarding compliance with California’s Menstrual Equity Act (AB 367), which requires public schools serving grades 6–12 to provide free menstrual products in all women’s restrooms, all‑gender restrooms, and at least one men’s restroom.</p>` +
+      `<p>At <strong>${school || "[School Name]"}</strong>, students have reported issues with access to menstrual products. We ask that you please review this matter and ensure that your school is in full compliance with state law so that all students have equitable access to these essential resources.</p>` +
+      `<p>Reported by: <strong>${anonymous ? "Anonymous Student Report" : (yourName || "(no name)")}</strong></p>` +
+      `<p>Sincerely,<br/>SLAP (slap.student.project@gmail.com)</p>`);
+  }, [school, anonymous, yourName]);
+
   useEffect(() => {
     setResultMessage(null);
   }, [grade, school, principalEmail, anonymous, yourName]);

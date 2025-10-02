@@ -27,8 +27,8 @@ export default function SiteHeader() {
           <NavLink to="/law" className={navItemClass}>
             California Law
           </NavLink>
-          <NavLink to="/privacy" className={navItemClass}>
-            Privacy
+          <NavLink to="/data" className={navItemClass}>
+            Data
           </NavLink>
         </nav>
 

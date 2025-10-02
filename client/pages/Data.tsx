@@ -41,8 +41,8 @@ function shortLabel(d: Date) {
 }
 
 export default function Data() {
-  const start = new Date(2023, 9, 11); // Oct 11, 2023
-  const end = new Date(2023, 10, 22); // Nov 22, 2023
+  const start = new Date(2023, 9, 21); // Oct 21, 2023
+  const end = new Date(2023, 10, 15); // Nov 15, 2023
 
   const dates: string[] = useMemo(() => {
     const arr: string[] = [];
@@ -58,13 +58,13 @@ export default function Data() {
       if (raw) {
         return {
           date,
-          yes: raw.yes ?? 0,
-          no: raw.no ?? 0,
-          both: raw.both ?? 0,
-          nr: raw.nr ?? 0,
+          yes: raw.yes,
+          no: raw.no,
+          both: raw.both,
+          reported: raw.reported,
         };
       }
-      return { date, yes: 0, no: 0, both: 0, nr: 100 };
+      return { date, yes: 0, no: 0, both: 0, reported: 0 };
     });
   }, [dates]);
 
@@ -82,47 +82,55 @@ export default function Data() {
     return w;
   }, [fullData]);
 
-  const computeAggregates = (entries: { yes: number; no: number; both: number; nr: number }[]) => {
-    const totals = { yes: 0, no: 0, both: 0, nr: 0 };
+  const computeAggregates = (entries: { yes: number; no: number; both: number; reported: number }[]) => {
+    const totals = { yes: 0, no: 0, both: 0, reported: 0 };
     entries.forEach((e) => {
       totals.yes += e.yes;
       totals.no += e.no;
       totals.both += e.both;
-      totals.nr += e.nr;
+      totals.reported += e.reported;
     });
-    const n = entries.length;
-    return {
-      yes: Math.round(totals.yes / n),
-      no: Math.round(totals.no / n),
-      both: Math.round(totals.both / n),
-      nr: Math.round(totals.nr / n),
-    };
+    return totals;
   };
 
   const displayAggregates = useMemo(() => {
     if (weekly) {
       const weekIndex = weeks.findIndex((w) => w.dates.includes(selected));
       const week = weeks[weekIndex] || weeks[0];
-      const entries = fullData.filter((d) => week.dates.includes(d.date)).map((d) => ({ yes: d.yes, no: d.no, both: d.both, nr: d.nr }));
+      const entries = fullData.filter((d) => week.dates.includes(d.date)).map((d) => ({ yes: d.yes, no: d.no, both: d.both, reported: d.reported }));
       return computeAggregates(entries);
     }
     const day = fullData.find((d) => d.date === selected)!;
-    return { yes: day.yes, no: day.no, both: day.both, nr: day.nr };
+    return { yes: day.yes, no: day.no, both: day.both, reported: day.reported };
   }, [weekly, selected, fullData, weeks]);
 
-  const pieData = [
-    { name: "Yes", value: displayAggregates.yes, color: COLORS.yes },
-    { name: "No", value: displayAggregates.no, color: COLORS.no },
-    { name: "Both", value: displayAggregates.both, color: COLORS.both },
-    { name: "NR", value: displayAggregates.nr, color: COLORS.nr },
-  ].filter((d) => d.value > 0);
+  // build pie data excluding NR; calculate percentages so they add up to 100
+  const pieData = useMemo(() => {
+    const yes = displayAggregates.yes || 0;
+    const no = displayAggregates.no || 0;
+    const both = displayAggregates.both || 0;
+    const total = yes + no + both;
+    if (total === 0) return [];
+    const raw = [
+      { name: "Yes", value: yes, color: COLORS.yes },
+      { name: "No", value: no, color: COLORS.no },
+      { name: "Both", value: both, color: COLORS.both },
+    ].filter((d) => d.value > 0);
+    // compute percentages and ensure sum to 100
+    let sum = 0;
+    const withPct = raw.map((d, i) => {
+      const pct = i === raw.length - 1 ? 100 - sum : Math.round((d.value / total) * 100);
+      sum += pct;
+      return { ...d, value: pct };
+    });
+    return withPct;
+  }, [displayAggregates]);
 
-  const majorityFor = (d: { yes: number; no: number; both: number; nr: number }) => {
+  const majorityFor = (d: { yes: number; no: number; both: number }) => {
     const arr = [
       { k: "yes", v: d.yes },
       { k: "no", v: d.no },
       { k: "both", v: d.both },
-      { k: "nr", v: d.nr },
     ];
     arr.sort((a, b) => b.v - a.v);
     return arr[0].k as keyof typeof COLORS;

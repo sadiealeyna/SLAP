@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import Report from "./pages/Report";
 import Law from "./pages/Law";
 import Data from "./pages/Data";
+import Thanks from "./pages/Thanks";
 import SiteHeader from "./components/layout/SiteHeader";
 import SiteFooter from "./components/layout/SiteFooter";
 

@@ -83,15 +83,9 @@ export default function Data() {
   };
 
   const displayAggregates = useMemo(() => {
-    if (weekly) {
-      const weekIndex = weeks.findIndex((w) => w.dates.includes(selected));
-      const week = weeks[weekIndex] || weeks[0];
-      const entries = fullData.filter((d) => week.dates.includes(d.date)).map((d) => ({ yes: d.yes, no: d.no, both: d.both, reported: d.reported }));
-      return computeAggregates(entries);
-    }
     const day = fullData.find((d) => d.date === selected)!;
     return { yes: day.yes, no: day.no, both: day.both, reported: day.reported };
-  }, [weekly, selected, fullData, weeks]);
+  }, [selected, fullData]);
 
   // build pie data excluding NR; calculate percentages so they add up to 100
   const pieData = useMemo(() => {

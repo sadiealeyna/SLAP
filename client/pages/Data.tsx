@@ -162,15 +162,15 @@ export default function Data() {
             <div className="mt-4 grid grid-cols-7 gap-2">
               {(weekly ? weeks.map((w, idx) => ({ key: w.label, label: w.label, dates: w.dates })) : fullData.map((d) => ({ key: d.date, label: shortLabel(new Date(d.date)), dates: [d.date] }))).map((cell) => {
                 // compute aggregate for the cell
-                const entries = fullData.filter((f) => cell.dates.includes(f.date)).map((f) => ({ yes: f.yes, no: f.no, both: f.both, nr: f.nr }));
+                const entries = fullData.filter((f) => cell.dates.includes(f.date)).map((f) => ({ yes: f.yes, no: f.no, both: f.both, reported: f.reported }));
                 const agg = computeAggregates(entries);
                 const maj = majorityFor(agg);
                 const isSelected = cell.dates.includes(selected);
 
                 let bg = COLORS[maj];
                 if (heatmap && maj === "no") {
-                  // darker red for higher no %
-                  const intensity = Math.min(1, agg.no / 100);
+                  // darker red for higher no proportion
+                  const intensity = agg.reported ? Math.min(1, agg.no / agg.reported) : 0;
                   bg = `rgba(244,67,54,${0.3 + intensity * 0.7})`;
                 }
 

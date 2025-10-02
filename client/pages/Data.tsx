@@ -152,7 +152,8 @@ export default function Data() {
                 const maj = majorityFor(agg);
                 const isSelected = cell.dates.includes(selected);
 
-                let bg = COLORS[maj];
+                // calendar color: make dates that would be green show as gray
+                let bg = maj === "yes" ? COLORS.nr : COLORS[maj];
                 if (heatmap && maj === "no") {
                   // darker red for higher no proportion
                   const intensity = agg.reported ? Math.min(1, agg.no / agg.reported) : 0;

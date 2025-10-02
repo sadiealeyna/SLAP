@@ -255,6 +255,17 @@ export default function Report() {
               <div className="mt-2 rounded-md bg-red-50 p-3 text-sm text-red-800">{resultMessage}</div>
             )}
 
+            <div className="mt-3 flex items-center justify-between">
+              <h3 className="text-sm font-semibold">Email preview</h3>
+              <button type="button" onClick={() => setShowPayload((s) => !s)} className="text-xs underline">
+                {showPayload ? 'Hide payload' : 'Show payload'}
+              </button>
+            </div>
+
+            {showPayload && (
+              <pre className="mt-2 overflow-x-auto rounded-md border bg-[rgba(0,0,0,0.04)] p-3 text-xs">{JSON.stringify(currentTemplateParams, null, 2)}</pre>
+            )}
+
             <div className="mt-4">
               <h3 className="text-sm font-semibold">Email preview</h3>
 

@@ -130,7 +130,7 @@ export default function Data() {
       <section className="container py-12">
         <h1 className="text-3xl md:text-4xl font-extrabold">Data Dashboard</h1>
         <p className="mt-2 text-foreground/80 max-w-3xl">
-          This dashboard shows how a law meant to guarantee menstrual equity plays out in practice. Each square represents a school on a given day — green means products were available, red means they weren’t, yellow means inconsistent, and gray means no report.
+          This dashboard shows how a law meant to guarantee menstrual equity plays out in practice. Each square represents a day of data collection of High Schools across the San Diego school district. green means products were available, red means they weren’t, and yellow means inconsistent.
         </p>
 
         <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-start">
@@ -138,10 +138,6 @@ export default function Data() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <label className="flex items-center gap-2">
-                  <input type="checkbox" checked={weekly} onChange={(e) => setWeekly(e.target.checked)} className="h-4 w-4" />
-                  <span className="text-sm">Weekly averages</span>
-                </label>
-                <label className="flex items-center gap-2 ml-4">
                   <input type="checkbox" checked={heatmap} onChange={(e) => setHeatmap(e.target.checked)} className="h-4 w-4" />
                   <span className="text-sm">Heatmap mode</span>
                 </label>

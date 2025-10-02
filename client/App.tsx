@@ -29,6 +29,7 @@ const App = () => (
           <Route path="/report" element={<Report />} />
           <Route path="/law" element={<Law />} />
           <Route path="/data" element={<Data />} />
+          <Route path="/thanks" element={<Thanks />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <SiteFooter />

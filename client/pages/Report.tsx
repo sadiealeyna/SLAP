@@ -147,6 +147,10 @@ export default function Report() {
       setSchool("");
       setPrincipalEmail("");
       setYourName("");
+      // navigate to thank-you page after a short delay
+      setTimeout(() => {
+        navigate('/thanks');
+      }, 600);
     } catch (err: any) {
       console.error("Send failed:", err);
       setResultMessage(`Failed to send report: ${err?.message || String(err)}`);

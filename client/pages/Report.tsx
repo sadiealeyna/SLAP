@@ -96,6 +96,13 @@ export default function Report() {
 
       let sendResult: any = null;
 
+      // Debugging: log template params so we can inspect what is being sent
+      try {
+        console.debug("EmailJS template_params:", templateParams);
+      } catch (e) {
+        // ignore
+      }
+
       try {
         sendResult = await sendWithSdk();
       } catch (sdkErr) {

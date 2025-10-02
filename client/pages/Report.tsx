@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string || "SLAP";
 const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string || "template_kx86xsp";

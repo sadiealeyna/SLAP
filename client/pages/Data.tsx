@@ -69,18 +69,7 @@ export default function Data() {
   }, [dates]);
 
   const [selected, setSelected] = useState<string>(fullData[0].date);
-  const [weekly, setWeekly] = useState(false);
   const [heatmap, setHeatmap] = useState(false);
-
-  const weeks = useMemo(() => {
-    // group by 7-day blocks starting from the first date
-    const w: { label: string; dates: string[] }[] = [];
-    for (let i = 0; i < fullData.length; i += 7) {
-      const block = fullData.slice(i, i + 7);
-      w.push({ label: `${shortLabel(new Date(block[0].date))} – ${shortLabel(new Date(block[block.length - 1].date))}`, dates: block.map((b) => b.date) });
-    }
-    return w;
-  }, [fullData]);
 
   const computeAggregates = (entries: { yes: number; no: number; both: number; reported: number }[]) => {
     const totals = { yes: 0, no: 0, both: 0, reported: 0 };

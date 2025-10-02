@@ -17,7 +17,7 @@ export default function Report() {
 
   const reporterName = anonymous ? "Anonymous" : yourName || "(no name)";
 
-  const emailSubject = useMemo(() => `${grade} student report — ${school || "(no school provided)"}`, [grade, school]);
+  const emailSubject = "Student Legislative Accountability Project";
 
   const emailBody = useMemo(() => {
     return `Hello Principal,\n\nA report has been submitted via the Student Legislative Accountability Project (SLAP):\n\nGrade: [${grade}]\nSchool: [${school}]\nReporter: [${reporterName}]\n\nThis message was sent on behalf of SLAP (slap.student.project@gmail.com).`;

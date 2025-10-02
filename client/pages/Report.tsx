@@ -242,11 +242,29 @@ export default function Report() {
 
             <div className="mt-4">
               <h3 className="text-sm font-semibold">Email preview</h3>
-              <div className="mt-2 rounded-lg border bg-slate-50 p-4 font-mono text-sm">
-                <div className="mb-2">To: {principalEmail || "[principal@example.edu]"}</div>
-                <div className="mb-2">From: {FROM_EMAIL}</div>
-                <div className="mb-2">Subject: {emailSubject}</div>
-                <pre className="whitespace-pre-wrap">{emailBody}</pre>
+
+              <div className="mt-3 rounded-lg border bg-white p-4 text-sm text-foreground shadow-sm">
+                <div className="mb-2 text-xs text-foreground/70">To: {principalEmail || "[principal@example.edu]"}</div>
+                <div className="mb-2 text-xs text-foreground/70">From: {FROM_EMAIL}</div>
+                <div className="mb-4 text-xs text-foreground/70">Subject: {emailSubject}</div>
+
+                <div className="rounded-md bg-slate-50 p-4 text-foreground">
+                  <p className="mb-4">Dear {school || "[School Name]"},</p>
+
+                  <p className="mb-3 leading-relaxed">
+                    I am writing to inform you of a concern regarding compliance with California’s Menstrual Equity Act (AB 367), which requires public schools serving grades 6–12 to provide free menstrual products in all women’s restrooms, all‑gender restrooms, and at least one men’s restroom.
+                  </p>
+
+                  <p className="mb-3 leading-relaxed">
+                    At <strong>{school || "[School Name]"}</strong>, students have reported issues with access to menstrual products. We ask that you please review this matter and ensure that your school is in full compliance with state law so that all students have equitable access to these essential resources.
+                  </p>
+
+                  <p className="mb-3">Thank you for your attention to this important issue.</p>
+
+                  <p className="mt-4">Reported by: <strong>{anonymous ? "Anonymous Student Report" : (yourName || "(no name)")}</strong></p>
+
+                  <p className="mt-6">Sincerely,<br/>SLAP (slap.student.project@gmail.com)</p>
+                </div>
               </div>
             </div>
           </form>

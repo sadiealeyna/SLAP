@@ -119,6 +119,14 @@ export default function Index() {
           </div>
         </div>
       </section>
+
+      {/* Contact */}
+      <section className="container py-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <h3 className="text-lg font-semibold">Contact</h3>
+          <p className="mt-2 text-foreground/80">Email: <a className="font-medium text-primary underline" href="mailto:slap.student.project@gmail.com">slap.student.project@gmail.com</a></p>
+        </div>
+      </section>
     </main>
   );
 }

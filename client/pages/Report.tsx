@@ -15,6 +15,7 @@ export default function Report() {
 
   const [sending, setSending] = useState(false);
   const [resultMessage, setResultMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const reporterName = anonymous ? "Anonymous" : yourName || "(no name)";
 

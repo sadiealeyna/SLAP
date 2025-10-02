@@ -37,6 +37,29 @@ export default function Report() {
     setResultMessage(null);
   }, [grade, school, principalEmail, anonymous, yourName]);
 
+  const currentTemplateParams = useMemo(() => ({
+    to_email: principalEmail,
+    from_email: FROM_EMAIL,
+    subject: emailSubject,
+
+    // Explicit variable names to use in your EmailJS template
+    school_name: school,
+    grade: grade,
+    reporter_name: reporterName,
+
+    // Both plain text and HTML versions
+    message_text: emailBody,
+    message_html: htmlBody,
+
+    // Backwards-compatible aliases
+    message: emailBody,
+    body: emailBody,
+    text: emailBody,
+    reporter: reporterName,
+  }), [principalEmail, school, grade, reporterName, emailBody, htmlBody]);
+
+  const [showPayload, setShowPayload] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setResultMessage(null);
@@ -53,26 +76,7 @@ export default function Report() {
 
     setSending(true);
 
-    const templateParams = {
-      to_email: principalEmail,
-      from_email: FROM_EMAIL,
-      subject: emailSubject,
-
-      // Explicit variable names to use in your EmailJS template
-      school_name: school,
-      grade: grade,
-      reporter_name: reporterName,
-
-      // Both plain text and HTML versions
-      message_text: emailBody,
-      message_html: htmlBody,
-
-      // Backwards-compatible aliases
-      message: emailBody,
-      body: emailBody,
-      text: emailBody,
-      reporter: reporterName,
-    } as Record<string, string>;
+    const templateParams = currentTemplateParams as Record<string, string>;
 
     try {
       // Prefer the EmailJS SDK if available — it's more robust with CORS and error messages.

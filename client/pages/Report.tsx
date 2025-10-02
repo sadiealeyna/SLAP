@@ -68,7 +68,12 @@ export default function Report() {
       });
 
       if (!resp.ok) {
-        const text = await resp.text();
+        let text = "Failed to send message";
+        try {
+          text = await resp.clone().text();
+        } catch (e) {
+          // ignore clone/read errors
+        }
         throw new Error(text || "Failed to send message");
       }
 

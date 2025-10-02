@@ -54,37 +54,81 @@ export default function Report() {
     } as Record<string, string>;
 
     try {
-      const resp = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          service_id: SERVICE_ID,
-          template_id: TEMPLATE_ID,
-          user_id: PUBLIC_KEY,
-          template_params: templateParams,
-        }),
-      });
-
-      if (!resp.ok) {
-        let text = "Failed to send message";
-        try {
-          text = await resp.clone().text();
-        } catch (e) {
-          // ignore clone/read errors
+      // Prefer the EmailJS SDK if available — it's more robust with CORS and error messages.
+      const sendWithSdk = async () => {
+        // Load SDK if not present
+        if (typeof (window as any).emailjs === "undefined") {
+          await new Promise<void>((resolve, reject) => {
+            const s = document.createElement("script");
+            s.src = "https://cdn.emailjs.com/sdk/2.3.2/email.min.js";
+            s.onload = () => resolve();
+            s.onerror = () => reject(new Error("Failed to load EmailJS SDK"));
+            document.head.appendChild(s);
+          });
         }
-        throw new Error(text || "Failed to send message");
+
+        const emailjs = (window as any).emailjs;
+        if (!emailjs.__initialized) {
+          try {
+            emailjs.init(PUBLIC_KEY);
+            emailjs.__initialized = true;
+          } catch (e) {
+            // ignore
+          }
+        }
+
+        return emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
+      };
+
+      let sendResult: any = null;
+
+      try {
+        sendResult = await sendWithSdk();
+      } catch (sdkErr) {
+        // SDK failed — fallback to REST API and capture detailed errors
+        console.warn("EmailJS SDK send failed, falling back to REST API:", sdkErr);
+
+        const resp = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            service_id: SERVICE_ID,
+            template_id: TEMPLATE_ID,
+            user_id: PUBLIC_KEY,
+            template_params: templateParams,
+          }),
+        });
+
+        if (!resp.ok) {
+          let msg = `Status ${resp.status}`;
+          try {
+            const json = await resp.clone().json();
+            msg = json?.error || JSON.stringify(json) || msg;
+          } catch (_) {
+            try {
+              const txt = await resp.clone().text();
+              msg = txt || msg;
+            } catch (_) {
+              // ignore
+            }
+          }
+          throw new Error(msg);
+        }
+
+        sendResult = await resp.text();
       }
 
+      console.log("Email send result:", sendResult);
       setResultMessage("Report sent — email delivered to the principal.");
       // Clear form except keep anonymous setting
       setSchool("");
       setPrincipalEmail("");
       setYourName("");
     } catch (err: any) {
-      console.error(err);
-      setResultMessage("Failed to send report. Please try again later.");
+      console.error("Send failed:", err);
+      setResultMessage(`Failed to send report: ${err?.message || String(err)}`);
     } finally {
       setSending(false);
     }

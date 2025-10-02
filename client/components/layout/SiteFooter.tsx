@@ -10,7 +10,7 @@ export default function SiteFooter() {
         <nav className="flex items-center gap-4 text-sm">
           <Link to="/report" className="hover:underline">Report</Link>
           <Link to="/law" className="hover:underline">Law</Link>
-          <Link to="/privacy" className="hover:underline">Privacy</Link>
+          <Link to="/data" className="hover:underline">Data</Link>
         </nav>
       </div>
     </footer>

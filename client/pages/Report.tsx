@@ -1,10 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string || "SLAP";
-const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string || "template_kx86xsp";
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string || "U1eCskqCSr48R44v1";
-const FROM_EMAIL = import.meta.env.VITE_EMAILJS_TO_EMAIL as string || "slap.student.project@gmail.com";
+const SERVICE_ID =
+  (import.meta.env.VITE_EMAILJS_SERVICE_ID as string) || "SLAP";
+const TEMPLATE_ID =
+  (import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string) || "template_kx86xsp";
+const PUBLIC_KEY =
+  (import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string) || "U1eCskqCSr48R44v1";
+const FROM_EMAIL =
+  (import.meta.env.VITE_EMAILJS_TO_EMAIL as string) ||
+  "slap.student.project@gmail.com";
 
 export default function Report() {
   const [grade, setGrade] = useState("9th");
@@ -26,37 +31,42 @@ export default function Report() {
   }, [grade, school, reporterName]);
 
   const htmlBody = useMemo(() => {
-    return (`<p>Dear ${school || "[School Name]"},</p>` +
+    return (
+      `<p>Dear ${school || "[School Name]"},</p>` +
       `<p>I am writing to inform you of a concern regarding compliance with California’s Menstrual Equity Act (AB 367), which requires public schools serving grades 6–12 to provide free menstrual products in all women’s restrooms, all‑gender restrooms, and at least one men’s restroom.</p>` +
       `<p>At <strong>${school || "[School Name]"}</strong>, students have reported issues with access to menstrual products. We ask that you please review this matter and ensure that your school is in full compliance with state law so that all students have equitable access to these essential resources.</p>` +
-      `<p>Reported by: <strong>${anonymous ? "Anonymous Student Report" : (yourName || "(no name)")}</strong></p>` +
-      `<p>Sincerely,<br/>SLAP (slap.student.project@gmail.com)</p>`);
+      `<p>Reported by: <strong>${anonymous ? "Anonymous Student Report" : yourName || "(no name)"}</strong></p>` +
+      `<p>Sincerely,<br/>SLAP (slap.student.project@gmail.com)</p>`
+    );
   }, [school, anonymous, yourName]);
 
   useEffect(() => {
     setResultMessage(null);
   }, [grade, school, principalEmail, anonymous, yourName]);
 
-  const currentTemplateParams = useMemo(() => ({
-    to_email: principalEmail,
-    from_email: FROM_EMAIL,
-    subject: emailSubject,
+  const currentTemplateParams = useMemo(
+    () => ({
+      to_email: principalEmail,
+      from_email: FROM_EMAIL,
+      subject: emailSubject,
 
-    // Explicit variable names to use in your EmailJS template
-    school_name: school,
-    grade: grade,
-    reporter_name: reporterName,
+      // Explicit variable names to use in your EmailJS template
+      school_name: school,
+      grade: grade,
+      reporter_name: reporterName,
 
-    // Both plain text and HTML versions
-    message_text: emailBody,
-    message_html: htmlBody,
+      // Both plain text and HTML versions
+      message_text: emailBody,
+      message_html: htmlBody,
 
-    // Backwards-compatible aliases
-    message: emailBody,
-    body: emailBody,
-    text: emailBody,
-    reporter: reporterName,
-  }), [principalEmail, school, grade, reporterName, emailBody, htmlBody]);
+      // Backwards-compatible aliases
+      message: emailBody,
+      body: emailBody,
+      text: emailBody,
+      reporter: reporterName,
+    }),
+    [principalEmail, school, grade, reporterName, emailBody, htmlBody],
+  );
 
   const [showPayload, setShowPayload] = useState(false);
 
@@ -69,7 +79,10 @@ export default function Report() {
       setResultMessage("Please enter your school name.");
       return;
     }
-    if (!principalEmail.trim() || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(principalEmail)) {
+    if (
+      !principalEmail.trim() ||
+      !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(principalEmail)
+    ) {
       setResultMessage("Please enter a valid principal email.");
       return;
     }
@@ -118,20 +131,26 @@ export default function Report() {
         sendResult = await sendWithSdk();
       } catch (sdkErr) {
         // SDK failed — fallback to REST API and capture detailed errors
-        console.warn("EmailJS SDK send failed, falling back to REST API:", sdkErr);
+        console.warn(
+          "EmailJS SDK send failed, falling back to REST API:",
+          sdkErr,
+        );
 
-        const resp = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        const resp = await fetch(
+          "https://api.emailjs.com/api/v1.0/email/send",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              service_id: SERVICE_ID,
+              template_id: TEMPLATE_ID,
+              user_id: PUBLIC_KEY,
+              template_params: templateParams,
+            }),
           },
-          body: JSON.stringify({
-            service_id: SERVICE_ID,
-            template_id: TEMPLATE_ID,
-            user_id: PUBLIC_KEY,
-            template_params: templateParams,
-          }),
-        });
+        );
 
         if (!resp.ok) {
           let msg = `Status ${resp.status}`;
@@ -160,7 +179,7 @@ export default function Report() {
       setYourName("");
       // navigate to thank-you page after a short delay
       setTimeout(() => {
-        navigate('/thanks');
+        navigate("/thanks");
       }, 600);
     } catch (err: any) {
       console.error("Send failed:", err);
@@ -174,10 +193,17 @@ export default function Report() {
     <main className="min-h-[60vh]">
       <section className="container py-12">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">Report</h1>
-          <p className="mt-2 text-foreground/80">Fill out the form below and we will email your school's principal.</p>
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+            Report
+          </h1>
+          <p className="mt-2 text-foreground/80">
+            Fill out the form below and we will email your school's principal.
+          </p>
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-6 rounded-lg border bg-white p-6 shadow-sm">
+          <form
+            onSubmit={handleSubmit}
+            className="mt-6 space-y-6 rounded-lg border bg-white p-6 shadow-sm"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <label className="flex w-full flex-col">
                 <span className="text-sm font-medium">Grade</span>
@@ -225,7 +251,9 @@ export default function Report() {
                   type="checkbox"
                   className="h-5 w-5 rounded border"
                 />
-                <label htmlFor="anonymous" className="text-sm">Send anonymously</label>
+                <label htmlFor="anonymous" className="text-sm">
+                  Send anonymously
+                </label>
               </div>
 
               {!anonymous && (
@@ -252,44 +280,79 @@ export default function Report() {
             </div>
 
             {resultMessage && (
-              <div className="mt-2 rounded-md bg-red-50 p-3 text-sm text-red-800">{resultMessage}</div>
+              <div className="mt-2 rounded-md bg-red-50 p-3 text-sm text-red-800">
+                {resultMessage}
+              </div>
             )}
 
             <div className="mt-3 flex items-center justify-between">
               <h3 className="text-sm font-semibold">Email preview</h3>
-              <button type="button" onClick={() => setShowPayload((s) => !s)} className="text-xs underline">
-                {showPayload ? 'Hide payload' : 'Show payload'}
+              <button
+                type="button"
+                onClick={() => setShowPayload((s) => !s)}
+                className="text-xs underline"
+              >
+                {showPayload ? "Hide payload" : "Show payload"}
               </button>
             </div>
 
             {showPayload && (
-              <pre className="mt-2 overflow-x-auto rounded-md border bg-[rgba(0,0,0,0.04)] p-3 text-xs">{JSON.stringify(currentTemplateParams, null, 2)}</pre>
+              <pre className="mt-2 overflow-x-auto rounded-md border bg-[rgba(0,0,0,0.04)] p-3 text-xs">
+                {JSON.stringify(currentTemplateParams, null, 2)}
+              </pre>
             )}
 
             <div className="mt-4">
               <h3 className="text-sm font-semibold">Email preview</h3>
 
               <div className="mt-3 rounded-lg border bg-white p-4 text-sm text-foreground shadow-sm">
-                <div className="mb-2 text-xs text-foreground/70">To: {principalEmail || "[principal@example.edu]"}</div>
-                <div className="mb-2 text-xs text-foreground/70">From: {FROM_EMAIL}</div>
-                <div className="mb-4 text-xs text-foreground/70">Subject: {emailSubject}</div>
+                <div className="mb-2 text-xs text-foreground/70">
+                  To: {principalEmail || "[principal@example.edu]"}
+                </div>
+                <div className="mb-2 text-xs text-foreground/70">
+                  From: {FROM_EMAIL}
+                </div>
+                <div className="mb-4 text-xs text-foreground/70">
+                  Subject: {emailSubject}
+                </div>
 
                 <div className="rounded-md bg-slate-50 p-4 text-foreground">
                   <p className="mb-4">Dear {school || "[School Name]"},</p>
 
                   <p className="mb-3 leading-relaxed">
-                    I am writing to inform you of a concern regarding compliance with California’s Menstrual Equity Act (AB 367), which requires public schools serving grades 6–12 to provide free menstrual products in all women’s restrooms, all‑gender restrooms, and at least one men’s restroom.
+                    I am writing to inform you of a concern regarding compliance
+                    with California’s Menstrual Equity Act (AB 367), which
+                    requires public schools serving grades 6–12 to provide free
+                    menstrual products in all women’s restrooms, all‑gender
+                    restrooms, and at least one men’s restroom.
                   </p>
 
                   <p className="mb-3 leading-relaxed">
-                    At <strong>{school || "[School Name]"}</strong>, students have reported issues with access to menstrual products. We ask that you please review this matter and ensure that your school is in full compliance with state law so that all students have equitable access to these essential resources.
+                    At <strong>{school || "[School Name]"}</strong>, students
+                    have reported issues with access to menstrual products. We
+                    ask that you please review this matter and ensure that your
+                    school is in full compliance with state law so that all
+                    students have equitable access to these essential resources.
                   </p>
 
-                  <p className="mb-3">Thank you for your attention to this important issue.</p>
+                  <p className="mb-3">
+                    Thank you for your attention to this important issue.
+                  </p>
 
-                  <p className="mt-4">Reported by: <strong>{anonymous ? "Anonymous Student Report" : (yourName || "(no name)")}</strong></p>
+                  <p className="mt-4">
+                    Reported by:{" "}
+                    <strong>
+                      {anonymous
+                        ? "Anonymous Student Report"
+                        : yourName || "(no name)"}
+                    </strong>
+                  </p>
 
-                  <p className="mt-6">Sincerely,<br/>SLAP (slap.student.project@gmail.com)</p>
+                  <p className="mt-6">
+                    Sincerely,
+                    <br />
+                    SLAP (slap.student.project@gmail.com)
+                  </p>
                 </div>
               </div>
             </div>

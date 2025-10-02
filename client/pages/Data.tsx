@@ -237,12 +237,20 @@ export default function Data() {
                 </div>
               </div>
 
-              <div className="mt-6 text-xs text-foreground/70">
-                Toggle "Weekly averages" to see aggregated data by week. Hover or click dates to explore specific days.
-              </div>
+              <div className="mt-6 text-xs text-foreground/70">Hover or click dates to explore specific days.</div>
             </div>
           </div>
         </div>
+
+        <section className="container py-8">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-xl font-bold">Conclusion</h2>
+            <p className="mt-3 text-foreground/80 leading-relaxed">
+              We collected data from every high school in the district through daily student reports. On average, more than half of schools participated each day, and over the course of the study period we captured input from every school at least once. While this dataset is not perfect and reflects the limitations of voluntary reporting, the results show a consistent trend: schools still have significant work to do in meeting the state mandate for menstrual product availability. Patterns also emerged when comparing access across communities, schools with higher proportions of minority students were less likely to report available products, while schools in higher-income areas showed somewhat greater access. These disparities highlight how inequities in implementation persist, even when a policy promises universal access.
+            </p>
+          </div>
+        </section>
+
       </section>
     </main>
   );

@@ -205,7 +205,7 @@ export default function Data() {
                   {(() => {
                     const total = displayAggregates.reported || 0;
                     if (total === 0) {
-                      return <div className="text-sm">No schools reported on this {weekly ? "week" : "date"}.</div>;
+                      return <div className="text-sm">No schools reported on this date.</div>;
                     }
                     const yes = displayAggregates.yes || 0;
                     const no = displayAggregates.no || 0;
@@ -230,7 +230,7 @@ export default function Data() {
                             {p.k === 'yes' ? 'Yes' : p.k === 'no' ? 'No' : 'Both'}: <span className="font-semibold" style={{ color: p.color }}>{p.pct}%</span>
                           </div>
                         ))}
-                        <div className="mt-3 text-sm text-foreground/70">{total} schools reported on this {weekly ? 'week' : 'date'}.</div>
+                        <div className="mt-3 text-sm text-foreground/70">{total} schools reported on this date.</div>
                       </>
                     );
                   })()}
